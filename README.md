@@ -1,31 +1,87 @@
-# Pet Pals Signup
+# Activity 11 - The Haunted Creature Registry
 
-My name is Abubeker Mohammed. I picked the Undergraduate track, and I only did Task A, the local signup tip.
+**Course:** MAD 4360 - Mobile App Development  
+**Track:** Undergraduate  
+**GitHub:** https://github.com/abubekerm1/haunted_creature_registry
 
-## Explanation of the local signup-tip simulation
+## Project Description
 
-The fixed category is password_help, and three short tips are saved in SignupTipCoach on the phone. There is no server and no login or API key, so the tip never reads the name, email, or password. The app waits a little, then shows one saved sentence with the label "Preset demo tip—not live AI.", or an error with Retry if "Make the tip fail" is on.
+For Activity 11, we used our Activity 10 signup form and changed it into a Haunted Creature Registry. The app now has three screens: Welcome, Signup, and Success. The user can enter their information, select a creature, and register it. After registration, the app shows the user's name and their selected creature.
 
-## Task A reflection
+## App Structure
 
-I ran flutter test and 13 tests passed. They covered an empty form, an email with no @, a short password, a valid signup, the tip success, the tip error with Retry, and a short screen.
+The app has three screen files inside the lib/screens folder.
 
-### Question 1. From the button tap to the text
+- welcome_screen.dart - Shows the animated title and the Enter the Registry button.
+- signup_screen.dart - Contains the signup form, validators, creature dropdown, date picker, password visibility, and loading button.
+- success_screen.dart - Shows the registered name and creature with a confetti animation.
 
-When I tap "Get a signup tip", _loadTip() calls SignupTipCoach.loadTip() and it does not read the name, email, or password. setState change _tipStatus to loading, so SignupPage builds again and I see a CircularProgressIndicator with "Loading tip...". If the fail switch is on, I turn it off and tap Retry, and then the preset tip shows.
+The main.dart file only starts the app and opens the Welcome screen. I think this makes the code easier to read because each screen has its own file.
 
-### Question 2. The test that changed my code
+## Navigation
 
-The first flutter test, "app opens on the signup page", failed because the Column overflowed by 98 pixels on the bottom. I did not notice that from only reading the code, and on my phone the tip can get cut off when the keyboard is open. I put the form in a SingleChildScrollView, and after that all 13 tests passed.
+I used Navigator.push() from Welcome to Signup. This keeps the Welcome screen in the navigation stack, so the user can go back.
 
-## How to run
+After valid registration, I used Navigator.pushReplacement() to open Success. This removes Signup from the stack. I tested the Android Back button from Success, and it returned to Welcome instead of the old signup form.
 
-My laptop do not have enough RAM for the emulator, so I used my Android phone. Plug the phone in, turn on USB debugging, then run flutter devices and flutter run. The release apk is build/app/outputs/flutter-apk/app-release.apk.
+## Form State
 
-## The form
+The name, email, and password use TextEditingController. The birth date and selected creature are stored in the SignupScreen State. The password visibility also uses a boolean State variable.
 
-MyApp is a StatelessWidget because it only keeps the theme. SignupPage is a StatefulWidget because the text boxes and the tip status change. Empty fields, an email with no @, and a password shorter than 6 characters show errors. The green snackbar only comes when validate() is true, and the tip cannot approve the signup.
+I rotated the Android Emulator while the signup form had information. The name, password visibility, birth date, and creature selection stayed the same in my test.
+
+I also tested leaving Signup and opening it again. All five fields were empty because it was a new Signup screen.
+
+## Dispose
+
+The dispose() method releases the text controllers when the Signup screen is removed. The Success screen also uses dispose() for the ConfettiController. This helps clean up resources when the screens are no longer used.
+
+## Activity 10 Signup Tip
+
+I kept the local signup-tip feature from Activity 10. It uses preset tips from SignupTipCoach and does not connect to a server or live AI service. The tip is separate from form validation.
+
+## Testing
+
+I tested the app using the Android Emulator.
+
+| Test | Observed Result |
+|---|---|
+| Empty signup form | All five validation errors appeared |
+| Email without @ | Email validation error appeared |
+| Password under 6 characters | Password validation error appeared |
+| Password visibility | Password could be shown and hidden |
+| Birth date 10/15/2000 | Date was accepted |
+| Future date 10/30/2026 | Date picker showed Out of range |
+| Creature dropdown | All five choices appeared and worked |
+| Successful registration | Name and creature appeared on Success |
+| Back from Success | Returned to Welcome |
+| Reopen Signup | Form fields were empty |
+| Emulator rotation | Form information stayed the same |
+| Loading spinner | Appeared before navigation |
+
+I ran `flutter analyze` and got "No issues found." I also ran `flutter test`, and all 7 tests passed.
+
+## How to Run
+
+Open the project in Visual Studio Code and run:
+
+```bash
+flutter pub get
+flutter run
+```
+
+The Android release APK is located at:
+
+`build/app/outputs/flutter-apk/app-release.apk`
+
+## Bugs and Fixes
+
+The old Activity 10 widget tests still used the MyApp and SignupPage class names. After we changed the app structure, Flutter analysis showed errors. We updated the test file to use HauntedMansionApp and SignupScreen. After that, Flutter analysis passed.
+
+## Group Members and Contributions
+
+Add each group member's name and their actual contribution here before submitting.
 
 ## My Contribution
 
-I worked on this project by myself. I made the signup form, added the local signup tip, and tested the app. I also fixed the screen overflow problem and wrote the README.
+I worked on the Flutter app, tested the form validation, checked the navigation, tested the date picker and creature choices, and built the release APK.
